@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qfedu.dao.CourseDao">
+
+    <select id="findAll" resultType="com.qfedu.entity.Course">
+        select * from vedio.course
+    </select>
+    
+    
+    <select id="findAll2" resultType="com.qfedu.vo.VvedioCourse">
+        select c.id,c.course_title,c.course_desc1,s.subject_name
+        from vedio.course c
+        inner join vedio.subject s
+        on c.subject_id = s.id
+    </select>
+
+    <insert id="addCourse" parameterType="course">
+        insert into vedio.course (course_title, course_desc1, subject_id) values
+        (#{courseTitle},#{courseDesc1},#{subjectId})
+    </insert>
+
+    <delete id="deleteByCourseId" parameterType="int">
+        delete from vedio.course where id=#{id}
+    </delete>
+
+
+    <select id="findByCourssId" parameterType="int" resultType="course">
+        select * from vedio.course where id=#{id}
+    </select>
+
+
+    <update id="updateCourse" parameterType="course">
+       update vedio.course set course_title=#{courseTitle},course_desc1=#{courseDesc1},
+       subject_id=#{subjectId} where id=#{id}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qfedu.dao.VedioDao">
+
+    <select id="findAll" resultType="com.qfedu.vo.Vvedio">
+#          select v.id,v.title,v.detail,s.speaker_name,v.time,v.play_num
+#          from video v inner join speaker s
+#          on v.spearker_id = s.id
+#          inner join course c
+
+#          select v.id,v.title,v.detail,s.speaker_name,v.time,v.play_num
+#          from vedio.video v inner join vedio.course c
+#          on v.course_id = c.id
+#          inner join vedio.speaker s
+#          on v.spearker_id = s.id
+#
+#          select v.*,speaker_name,course_title from vedio.speaker s
+#          inner join vedio.video v
+#          on v.spearker_id = s.id
+#          inner join vedio.course c
+#          on c.id = v.course_id
+        select v.id,v.title,v.detail,s.speaker_name,v.time,v.play_num from vedio.video v
+        inner join vedio.speaker s on v.spearker_id = s.id
+        inner join vedio.course c on v.course_id = c.id
+        <where>
+            <if test="speakerName != null and speakerName != ''">
+               and speaker_name = #{speakerName}
+            </if>
+            <if test="courseTitle != null and courseTitle != ''">
+               and course_title = #{courseTitle}
+            </if>
+            <if test="title != null and title  != ''">
+                title like concat ('%',concat(#{title}),'%')
+            </if>
+        </where>
+    </select>
+
+<!--    <select id="findAll" parameterType="map"  resultType="videoInfo">-->
+<!--        select v.id, v.title, v.detail ,v.time,s.speakerName,v.playNum, c.courseTitle from video v-->
+<!--        inner join speaker s on v.spearkerId = s.id-->
+<!--        inner join course c on v.courseId = c.id-->
+<!--        <where>-->
+<!--            <if test="title != null and title  != ''">-->
+<!--                title   like"%"#{title}"%"-->
+<!--            </if>-->
+<!--            <if test="speakerName != null and speakerName != ''">-->
+<!--                and speaker_name=#{speakerName}-->
+<!--            </if>-->
+<!--            <if test="courseTitle != null and courseTitle != ''">-->
+<!--                and courseTitle=#{courseTitle}-->
+<!--            </if>-->
+<!--        </where>-->
+
+<!--    </select>-->
+
+
+    <insert id="addvedio" parameterType="vedio">
+        insert into vedio.video(title, spearker_id, course_id, time, image_url, video_url, detail) values
+        (#{title},#{spearkerId},#{courseId},#{time},#{imageUrl},#{videoUrl},#{detail})
+    </insert>
+
+    <delete id="deleteById" parameterType="int">
+        delete from vedio.video where id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="int" resultType="com.qfedu.vo.Vvedio2">
+        select  v.title, v.detail ,v.time,v.video_url,v.image_url,v.spearker_id,v.course_id from vedio.video v
+        where v.id=#{id}
+    </select>
+
+
+    <update id="updateVedio" parameterType="vedio">
+        update vedio.video set title=#{title},detail=#{detail},spearker_id=#{spearkerId},course_id=#{courseId},video_url=#{videoUrl},image_url=#{imageUrl}
+        where id=#{id};
+    </update>
+
+
+    <delete id="deleteManyVideo" parameterType="int">
+    delete from vedio.video where id in
+    <foreach collection="array" item="id" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
+</delete>
+
+
+        </mapper>
